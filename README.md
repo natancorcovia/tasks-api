@@ -1,4 +1,4 @@
-# Tasks API 📝
+# Tasks API 📝 (Em Desenvolvimento)
 
 API de gerenciamento de tarefas com autenticação JWT, construída com **NestJS**.  
 Cada usuário pode criar, visualizar, atualizar e deletar suas próprias tarefas.
