@@ -1,23 +1,41 @@
 import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entity/user.entity';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  private users: User[] = []; // ✅ agora o TS sabe que é um array de User
 
-  async create(username: string, password: string, role: 'user' | 'admin') {
-    const hashed = await bcrypt.hash(password, 10);
-    const user = { id: Date.now(), username, password: hashed, role };
-    this.users.push(user);
+  create(createUserDto: CreateUserDto): User {
+    const newUser: User = {
+      id: this.users.length + 1,
+      ...createUserDto,
+      role: 'user', // default
+    };
+
+    this.users.push(newUser);
+    return newUser;
+  }
+
+  findAll(): User[] {
+    return this.users;
+  }
+
+  findOne(id: number): User | undefined {
+    return this.users.find((user) => user.id === id);
+  }
+
+  update(id: number, updateUserDto: UpdateUserDto): User | undefined {
+    const user = this.findOne(id);
+    if (user) {
+      Object.assign(user, updateUserDto);
+    }
     return user;
   }
 
-  async findByUsername(username: string) {
-    return this.users.find((u) => u.username === username);
-  }
-
-  async findById(id: number) {
-    return this.users.find((u) => u.id === id);
+  remove(id: number) {
+    this.users = this.users.filter((user) => user.id !== id);
+    return { deleted: true };
   }
 }
