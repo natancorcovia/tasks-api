@@ -5,13 +5,13 @@ import { User } from './entity/user.entity';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = []; // ✅ agora o TS sabe que é um array de User
+  private users: User[] = [];
 
   create(createUserDto: CreateUserDto): User {
     const newUser: User = {
       id: this.users.length + 1,
       ...createUserDto,
-      role: 'user', // default
+      role: 'user',
     };
 
     this.users.push(newUser);
@@ -24,6 +24,10 @@ export class UsersService {
 
   findOne(id: number): User | undefined {
     return this.users.find((user) => user.id === id);
+  }
+
+  findByEmail(email: string): User | undefined {
+    return this.users.find((user) => user.email === email);
   }
 
   update(id: number, updateUserDto: UpdateUserDto): User | undefined {
